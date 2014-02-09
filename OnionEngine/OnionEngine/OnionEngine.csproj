@@ -110,10 +110,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Debug\RectangleF.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="Graphic.cs" />
     <Compile Include="Hitbox.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="OE.cs" />

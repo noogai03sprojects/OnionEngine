@@ -37,13 +37,13 @@ namespace OnionTestGame
             {
                 OE.Debug.Enabled = !OE.Debug.Enabled;
             }
-            timer -= OE.delta;
+            timer -= OE.Delta;
             if (timer <= 0)
             {
                 Enemies.Add(new Enemy(player));
                 Add(Enemies);
 
-                timer = 1;
+                timer = 1f;
             }
 
             Enemies.RemoveAll(x => !x.Alive);

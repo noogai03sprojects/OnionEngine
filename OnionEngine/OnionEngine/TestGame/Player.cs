@@ -13,6 +13,7 @@ namespace OnionTestGame
     {
         float SwordSwipeTimer = 0;
         Entity SwordSwipe;
+        Vector2 SwordOffset = Vector2.Zero;
 
         int Direction = 0;
 
@@ -28,6 +29,8 @@ namespace OnionTestGame
             Drag.X = 20;
             Drag.Y = 20;
 
+            //LoadGraphic("SpaceManRun", true, 50, 50);
+
             CentreOrigin();
             MakeDefaultHitbox();
             Type = "player";
@@ -39,15 +42,15 @@ namespace OnionTestGame
             SwordSwipe.CentreOrigin();
             SwordSwipe.MakeDefaultHitbox();
 
+            //AddAnimation("run", new int[]{0, 1, 2, 3, 4, 5, 6, 7}, 7, true);
+            //Play("run", true);
+
             base.Init(stage);
         }
 
         public override void Update()
         {
-            SwordSwipe.Position = Position + new Vector2(
-                20 * (float)Math.Cos(MathHelper.PiOver2 * Direction),
-                20 * (float)Math.Sin(MathHelper.PiOver2 * Direction));
-            SwordSwipe.Angle = MathHelper.PiOver2 * Direction;
+            
 
             Acceleration.X = 0;
             Acceleration.Y = 0;
@@ -73,9 +76,7 @@ namespace OnionTestGame
             }
             if (OE.Input.Pressed(Keys.Z))
             {
-                SwordSwipeTimer = 0.2f;
-                
-                Stage.Add(SwordSwipe);
+                Attack();                
                 //SwordSwipe.Flip();
             }
 
@@ -96,7 +97,7 @@ namespace OnionTestGame
                     //200 * (float)Math.Cos(step
             }
 
-            SwordSwipeTimer -= OE.delta;
+            SwordSwipeTimer -= OE.Delta;
             if (SwordSwipeTimer <= 0)
             {
                 Stage.Remove(SwordSwipe);
@@ -105,6 +106,31 @@ namespace OnionTestGame
             //Angle = MathHelper.PiOver4;
 
             base.Update();
+
+
+            if (SwordSwipeTimer > 0)
+            {
+                SwordSwipe.Position = Position + SwordOffset;
+            }
+            
+        }
+
+        private void Attack()
+        {
+            if ((Direction + 1) % 2 == 0)
+            {
+                //SwordSwipe.SetHitbox(40, 10);
+            }
+
+            SwordOffset = new Vector2(
+                    20 * (float)Math.Cos(MathHelper.PiOver2 * Direction),
+                    20 * (float)Math.Sin(MathHelper.PiOver2 * Direction));
+
+            SwordSwipeTimer = 0.4f;
+            SwordSwipe.Angle = MathHelper.PiOver2 * Direction;
+            Stage.Add(SwordSwipe);
+
+            //olololololololol
         }
     }
 }

@@ -19,7 +19,11 @@ namespace OnionTestGame
         {
             MakeGraphic(20, 20, Color.Red);
 
-            Position = new Vector2(OE.Random.Next(800), OE.Random.Next(480));  
+            Position = new Vector2(OE.Random.Next(800), OE.Random.Next(480)); 
+
+            while (Math.Abs((float)((Position - target.Position).Length())) < 200)
+                Position = new Vector2(OE.Random.Next(800), OE.Random.Next(480));  
+            
             MaxVelocity.X = 200;
             MaxVelocity.Y = 200;
             //Drag.X = 40;
@@ -45,7 +49,7 @@ namespace OnionTestGame
                 Kill();
             }
 
-            Angle += 2 * OE.delta;
+            Angle += 2 * OE.Delta;
 
             base.Update();
         }

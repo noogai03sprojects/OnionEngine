@@ -14,7 +14,7 @@ namespace OnionEngine
         public static Stage Stage;
 
         public static GameTime gameTime;
-        public static float delta;
+        public static float Delta;
 
         public static SpriteBatch SpriteBatch;
         public static GraphicsDevice Device;
@@ -42,11 +42,25 @@ namespace OnionEngine
 
         public static void Update()
         {            
-            delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             //if (IsFirstFrame
 
             Input.Update();
+        }
+
+        public static Texture2D LoadGraphic(string path)
+        {
+            return Content.Load<Texture2D>(path);
+        }
+
+        public static int RandInt(int max)
+        {
+            return Random.Next(max);
+        }
+        public static float RandFloat(float min, float max)
+        {
+            return (float)Random.NextDouble() * (max - min) + min;
         }
     }
 }
