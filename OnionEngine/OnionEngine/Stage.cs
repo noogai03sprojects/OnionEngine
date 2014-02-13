@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework;
 
 namespace OnionEngine
 {
+    /// <summary>
+    /// The equivalent of World in FlashPunk. Add entities to a subclass of this.
+    /// </summary>
     abstract class Stage
     {
         private List<Entity> UpdateList = new List<Entity>();
@@ -17,18 +20,18 @@ namespace OnionEngine
 
         public void Add(Entity entity, bool render = true, bool update = true)
         {
-            if (entity.Alive)
+            
+            if (update && !UpdateList.Contains(entity))
+                UpdateList.Add(entity);
+            if (render && !RenderList.Contains(entity))
+                RenderList.Add(entity);
+            if (!AllEntities.Contains(entity))
             {
-                if (update && !UpdateList.Contains(entity))
-                    UpdateList.Add(entity);
-                if (render && !RenderList.Contains(entity))
-                    RenderList.Add(entity);
-                if (!AllEntities.Contains(entity))
-                {
-                    AllEntities.Add(entity);
-                    entity.Init(this);
-                }
+                AllEntities.Add(entity);
+                entity.Init(this);
             }
+            
+            entity.Alive = true;
         }
 
         public void Add(IEnumerable<Entity> entities, bool render = true, bool update = true)
@@ -47,6 +50,8 @@ namespace OnionEngine
                 RenderList.Remove(entity);
             if (AllEntities.Contains(entity))
                 AllEntities.Remove(entity);
+
+            entity.Alive = false;
         }
 
         public virtual void Init()

@@ -8,6 +8,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace OnionEngine
 {
+
+    /// <summary>
+    /// A base engine class that provides core stuff. Leave this alone.
+    /// </summary>
     class OEGame : Game
     {
         GraphicsDeviceManager graphics;        
@@ -26,6 +30,13 @@ namespace OnionEngine
             OE.Content = Content;
             InitGame();
             base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            OE.Debug.Font = Content.Load<SpriteFont>("OnionResources\\OnionFont");
+            
+            base.LoadContent();
         }
 
         public void InitGame()
@@ -63,7 +74,7 @@ namespace OnionEngine
         {
             GraphicsDevice.Clear(Color.Red);
 
-            OE.SpriteBatch.Begin();
+            OE.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
             if (OE.HasStage)
             {
                 OE.Stage.Draw();

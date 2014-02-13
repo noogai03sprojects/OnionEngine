@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace OnionEngine
 {
+    /// <summary>
+    /// This class, or a derivative, will be basically every object in your game.
+    /// </summary>
     class Entity
     {
         protected Stage Stage;
@@ -32,6 +35,7 @@ namespace OnionEngine
 
         public bool Alive = true;
 
+        public Color Color = Color.White;
 
         #region Animation stuff
 
@@ -43,7 +47,7 @@ namespace OnionEngine
         Animation currentAnim;
         int frame = 0;
 
-        bool finished = true;
+        public bool Finished = true;
         #endregion
 
         public virtual void Init(Stage stage)
@@ -74,7 +78,8 @@ namespace OnionEngine
             while (Angle < 0)
                 Angle += MathHelper.TwoPi;
 
-            Hitbox.Update();
+            if (HasHitbox)
+                Hitbox.Update();
 
             if (Animated)
                 UpdateAnimation();
@@ -84,7 +89,7 @@ namespace OnionEngine
 
         private void UpdateAnimation()
         {
-            if (!finished)
+            if (!Finished)
             {
                 frameTimer += OE.Delta;
 
@@ -92,12 +97,16 @@ namespace OnionEngine
                 {
                     frameTimer -= currentAnim.Delay;
                     frame++;
-                    if (frame >= currentAnim.Frames.Length)
+                    if (frame >= currentAnim.Length)
                     {
                         if (currentAnim.Looped)
                             frame = 0;
                         else
-                            finished = true;
+                        {
+                            Finished = true;
+                            frame = 0;
+                            return;
+                        }
                     }
                 }
 
@@ -130,6 +139,8 @@ namespace OnionEngine
                     Hitbox = new Hitbox(Graphic.Width, Graphic.Height, this);
                     Hitbox.Offset = -Origin;
                 }
+                //if (Hitbox.Flipped)
+                //    H
             }
             else
                 throw new InvalidOperationException("Graphic not assigned. Cannot assign default hitbox.");
@@ -153,12 +164,15 @@ namespace OnionEngine
             Stage.Remove(this);
         }
 
-        public void Draw()
+        /// <summary>
+        /// Draws the sprite. This is normally called internally if the entity is in the Stage's RenderList.
+        /// </summary>
+        public virtual void Draw()
         {
             if (Animated)
-                OE.SpriteBatch.Draw(Graphic, Position, frameBounds, Color.White, Angle, Origin, 1, 0, 0);
+                OE.SpriteBatch.Draw(Graphic, Position, frameBounds, Color, Angle, Origin, 1, 0, 0);
             else
-                OE.SpriteBatch.Draw(Graphic, Position, null, Color.White, Angle, Origin, 1, 0, 0);
+                OE.SpriteBatch.Draw(Graphic, Position, null, Color, Angle, Origin, 1, 0, 0);
         }
 
         public void CentreOrigin()
@@ -242,7 +256,8 @@ namespace OnionEngine
                 if (animations[i].Name == name)
                 {
                     currentAnim = animations[i];
-                    finished = false;
+                    Finished = false;
+                    frame = 0;
                 }
 
                 i++;

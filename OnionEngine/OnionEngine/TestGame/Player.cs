@@ -11,13 +11,14 @@ namespace OnionTestGame
 {
     class Player : Entity
     {
-        float SwordSwipeTimer = 0;
+        //float SwordSwipeTimer = 0;
         Entity SwordSwipe;
         Vector2 SwordOffset = Vector2.Zero;
 
-        int Direction = 0;
+        public int Direction = 0;
 
-        int Lives = 10;
+        public int Lives = 10;
+        public bool Invulnerable = false;
         
         public override void Init(Stage stage)
         {
@@ -37,8 +38,11 @@ namespace OnionTestGame
 
             SwordSwipe = new Entity();
             SwordSwipe.MakeGraphic(30, 30, Color.Blue);
-            SwordSwipe.Graphic = OE.Content.Load<Texture2D>("sord png");
+            SwordSwipe.LoadGraphic("sordanim", true, 30, 50);
             SwordSwipe.Type = "sword";
+
+            SwordSwipe.AddAnimation("swing", new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, 40, false);
+
             SwordSwipe.CentreOrigin();
             SwordSwipe.MakeDefaultHitbox();
 
@@ -50,7 +54,18 @@ namespace OnionTestGame
 
         public override void Update()
         {
+            if (OE.Input.Pressed(Keys.Z))
+            {
+                Attack();
+                //SwordSwipe.Flip();
+            }
+            if (OE.Input.Pressed(Keys.F2))
+            {
+                Invulnerable = !Invulnerable;
+                //SwordSwipe.Flip();
+            }
             
+            SwordSwipe.Hitbox.CentreOrigin();
 
             Acceleration.X = 0;
             Acceleration.Y = 0;
@@ -74,14 +89,15 @@ namespace OnionTestGame
                 Direction = 1;
                 Acceleration.Y = 20;
             }
-            if (OE.Input.Pressed(Keys.Z))
-            {
-                Attack();                
-                //SwordSwipe.Flip();
-            }
 
-            if (Collide("enemy") != null)
-            {                
+
+            SwordSwipe.Hitbox.CentreOrigin();
+
+            
+            //if you're touching an ememy, kill the player.
+            if (Collide("enemy") != null && !Invulnerable)
+            {
+                Console.WriteLine(Lives);
                 Position = new Vector2(400, 200);
                 Lives--;
                 int count = ((TestStage)OE.UserData[0]).Enemies.Count;
@@ -92,45 +108,82 @@ namespace OnionTestGame
                     Vector2 pos = new Vector2( 200 * (float)Math.Cos(i * step),
                                               200 * (float)Math.Sin(i * step));
                     ((TestStage)OE.UserData[0]).Enemies[i].Position = Position + pos;
-
+                    ((TestStage)OE.UserData[0]).Enemies[i].Velocity = Vector2.Zero;
+                    ((TestStage)OE.UserData[0]).Enemies[i].InvulnTimer = 0;
                 }
                     //200 * (float)Math.Cos(step
             }
-
-            SwordSwipeTimer -= OE.Delta;
-            if (SwordSwipeTimer <= 0)
+            SwordSwipe.Hitbox.CentreOrigin();
+            //SwordSwipeTimer -= OE.Delta;
+            if (SwordSwipe.Finished)
             {
                 Stage.Remove(SwordSwipe);
             }
 
             //Angle = MathHelper.PiOver4;
 
-            base.Update();
+            SwordSwipe.Hitbox.CentreOrigin();
 
+            
+            SwordSwipe.Hitbox.CentreOrigin();
+            //if (OE.Input.Pressed(Buttons.X))
+            //{
+            //    Attack();
+            //}
 
-            if (SwordSwipeTimer > 0)
+            //if (OE.Input.LeftThumbStick != Vector2.Zero)
+            //{
+            //    Position.X += 20 * OE.Input.LeftThumbStick.X;
+            //    Position.Y += -20 * OE.Input.LeftThumbStick.Y;
+            //}
+
+            if (!SwordSwipe.Finished)
             {
                 SwordSwipe.Position = Position + SwordOffset;
             }
-            
+
+            base.Update();
+            SwordSwipe.Hitbox.CentreOrigin();
         }
 
         private void Attack()
         {
-            if ((Direction + 1) % 2 == 0)
-            {
-                //SwordSwipe.SetHitbox(40, 10);
-            }
+            SwordSwipe.Hitbox.CentreOrigin();
+
+
+            //Console.WriteLine(Direction);
 
             SwordOffset = new Vector2(
                     20 * (float)Math.Cos(MathHelper.PiOver2 * Direction),
                     20 * (float)Math.Sin(MathHelper.PiOver2 * Direction));
 
-            SwordSwipeTimer = 0.4f;
+
+            SwordSwipe.Hitbox.CentreOrigin();
+            
+            //SwordSwipe.MakeDefaultHitbox();
+
+            //SwordSwipeTimer = 1f;
             SwordSwipe.Angle = MathHelper.PiOver2 * Direction;
-            Stage.Add(SwordSwipe);
+            
+            SwordSwipe.Play("swing", true);
 
             //olololololololol
+
+            if ((Direction + 1) % 2 == 0)
+            {
+                SwordSwipe.Hitbox.Flipped = true;
+                SwordSwipe.Hitbox.CentreOrigin();
+                //SwordSwipe.Hitbox.Offset -= SwordOffset;
+            }
+            else
+            {
+                SwordSwipe.Hitbox.Flipped = false;
+                SwordSwipe.Hitbox.CentreOrigin();
+
+                //SwordSwipe.Hitbox.Offset -= SwordOffset;
+            }
+
+            Stage.Add(SwordSwipe);
         }
     }
 }

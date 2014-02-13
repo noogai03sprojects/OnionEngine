@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework;
 
 namespace OnionEngine
 {
+    /// <summary>
+    /// Input managing class. Don't instantiate this; use OE.Input instead.
+    /// </summary>
     class Input
     {
         KeyboardState oldKeyboardState, newKeyboardState;
@@ -105,6 +108,10 @@ namespace OnionEngine
         public bool Check(Buttons button)
         {
             return newGamePadState.IsButtonDown(button);            
+        }
+        public bool Pressed(Buttons button)
+        {
+            return newGamePadState.IsButtonDown(button) && oldGamePadState.IsButtonUp(button);
         }
     }
 }

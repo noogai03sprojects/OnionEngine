@@ -8,6 +8,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace OnionEngine
 {
+    /// <summary>
+    /// The engine's catch-all main class, like FP in FlashPunk and FlxG in Flixel.
+    /// </summary>
     static class OE
     {
         public static bool HasStage = false;

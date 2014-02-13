@@ -9,19 +9,24 @@ namespace OnionTestGame
 {
     class Enemy : Entity
     {
-        Player target;
+        Player player;
         public Enemy(Player player)
         {
-            target = player;
+            this.player = player;
         }
+
+        int HP = 20;
+
+        public float InvulnTimer = 0;
 
         public override void Init(Stage stage)
         {
-            MakeGraphic(20, 20, Color.Red);
+            MakeGraphic(20, 20, Color.White);
+            Color = Color.Red;
 
             Position = new Vector2(OE.Random.Next(800), OE.Random.Next(480)); 
 
-            while (Math.Abs((float)((Position - target.Position).Length())) < 200)
+            while (Math.Abs((float)((Position - player.Position).Length())) < 200)
                 Position = new Vector2(OE.Random.Next(800), OE.Random.Next(480));  
             
             MaxVelocity.X = 200;
@@ -39,14 +44,28 @@ namespace OnionTestGame
 
         public override void Update()
         {
-            Vector2 direction = target.Position - Position;
+            Vector2 direction = player.Position - Position;
             direction.Normalize();
 
-            Position += direction * 2;
+            Velocity += direction * 8;
+            InvulnTimer -= OE.Delta;
+            if (InvulnTimer <= 0)
+                Color = Color.Red;
 
             if (Collide("sword") != null)
             {
-                Kill();
+                if (InvulnTimer <= 0)
+                {
+                    HP -= 5;
+                    InvulnTimer = 0.2f;
+                    Color = Color.White;
+                }
+
+                if (HP <= 0)
+                    Kill();
+                Velocity = player.Velocity + new Vector2(
+                    200 * (float)Math.Cos(MathHelper.PiOver2 * player.Direction),
+                    200 * (float)Math.Sin(MathHelper.PiOver2 * player.Direction));
             }
 
             Angle += 2 * OE.Delta;
