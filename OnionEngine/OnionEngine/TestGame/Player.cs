@@ -97,7 +97,7 @@ namespace OnionTestGame
             //if you're touching an ememy, kill the player.
             if (Collide("enemy") != null && !Invulnerable)
             {
-                Console.WriteLine(Lives);
+                //Console.WriteLine(Lives);
                 Position = new Vector2(400, 200);
                 Lives--;
                 int count = ((TestStage)OE.UserData[0]).Enemies.Count;

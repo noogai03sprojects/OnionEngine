@@ -9,16 +9,16 @@ namespace OnionEngine
     /// Holds a group of Entities, can recycle them to efficiently replace them.
     /// ON HOLD NOW; YNGN
     /// </summary>
-    class Group
-    {
-        List<Entity> Entities = new List<Entity>();
+    //class Group
+    //{
+    //    List<Entity> Entities = new List<Entity>();
 
-        bool linked = false;
-        Stage stage = null;
+    //    bool linked = false;
+    //    Stage stage = null;
 
-        public void Add(Entity ent)
-        {
+    //    public void Add(Entity ent)
+    //    {
 
-        }
-    }
+    //    }
+    //}
 }
