@@ -22,16 +22,23 @@ namespace OnionEngine
         public Vector2 Position;
 
         Action<Particle> UpdateAction = null;
+
+        Entity Target = null;
+        bool locked = false;
+        private Vector2 offset;
         
-        public Emitter(Vector2 Position, Action<Particle> UpdateMethod, int capacity = 1000)
+        public Emitter(Vector2 Position, Action<Particle> UpdateMethod = null, int capacity = 1000)
         {
             this.capacity = capacity;
             Particles = new List<Particle>(capacity);
             Images = new List<Texture2D>();
+            Origins = new List<Vector2>();
+            this.Position = Position;
+            UpdateAction = UpdateMethod;
 
             for (int i = 0; i < capacity; i++)
             {
-                Particles[i] = new Particle();
+                Particles.Add(new Particle());
             }
         }
 
@@ -81,7 +88,7 @@ namespace OnionEngine
             Particles[index].Alive = false;
         }
 
-        public Vector2 RandomizeVelocity(float MinForce, float MaxForce, float MinAngle, float MaxAngle)
+        public static Vector2 RandomizeVelocity(float MinForce, float MaxForce, float MinAngle, float MaxAngle)
         {
             float angle = OE.RandFloat(MinAngle, MaxAngle);
             float force = OE.RandFloat(MinForce, MaxForce);
@@ -90,6 +97,10 @@ namespace OnionEngine
                     force * (float)Math.Sin(angle)
                 );
             return output;
+        }
+        public static Vector2 RandomizeVelocity(float MinForce, float MaxForce)
+        {
+            return Emitter.RandomizeVelocity(MinForce, MaxForce, 0, MathHelper.TwoPi);
         }
         public float RandomizeAngle()
         {
@@ -100,28 +111,51 @@ namespace OnionEngine
         //{
 
         //}
-        public void AddParticle(Vector2 velocity)
+
+        public void AddParticle(Vector2 velocity, float age)
+        {
+            AddParticle(velocity, age, Color.White);
+        }
+
+        public void AddParticle(Vector2 velocity, float age, Color color)
         {
             int i = GetParticle();
+            if (i == -1)
+                return;
             Particles[i].Position = Position;
             Particles[i].Velocity = velocity;
             Particles[i].ImageIndex = OE.RandInt(Images.Count);
             Particles[i].Angle = RandomizeAngle();
+            Particles[i].Age = age;
+            Particles[i].Alpha = 1;
+            Particles[i].Color = color;
+            Particles[i].Alive = true;
         }
 
         public void UpdateParticles()
         {
+            if (locked)
+                Position = Target.Position + offset;
+
             for (int i = 0; i < capacity; i++)
             {
                 if (Particles[i].Alive)
                 {
+                    Particles[i].Age -= OE.Delta;
+                    if (Particles[i].Age <= 0)
+                    {
+                        Particles[i].Alive = false;
+                        continue;
+                    }
+
                     if (UpdateAction != null)
                         UpdateAction(Particles[i]);
-
+                    
                     Particles[i].Position += Particles[i].Velocity * OE.Delta;
                     Particles[i].Angle += Particles[i].AngVel * OE.Delta;
                 }
             }
+            
         }
 
         public void Draw()
@@ -130,9 +164,23 @@ namespace OnionEngine
             {
                 if (Particles[i].Alive)
                 {
-                    OE.SpriteBatch.Draw(Images[Particles[i].ImageIndex], Particles[i].Position, null, Color.White, Particles[i].Angle, Origins[i], 1, 0, 0);
+                    OE.SpriteBatch.Draw(Images[Particles[i].ImageIndex], Particles[i].Position, null, Particles[i].Color * Particles[i].Alpha, Particles[i].Angle, Origins[Particles[i].ImageIndex], 1, 0, 0);
                 }
             }
+        }
+
+        public void LockTo(Entity e, Vector2 offset)
+        {
+            locked = true;
+            Target = e;
+            this.offset = offset;
+        }
+
+        public void Unlock()
+        {
+            locked = false;
+            Target = null;
+            offset = Vector2.Zero;
         }
     }
 }

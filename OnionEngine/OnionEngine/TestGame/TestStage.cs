@@ -5,6 +5,7 @@ using System.Text;
 using OnionEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace OnionTestGame
 {
@@ -17,6 +18,8 @@ namespace OnionTestGame
         public List<Enemy> Enemies = new List<Enemy>();
 
         Text text;
+
+        Emitter emitter;
 
         public override void Init()
         {
@@ -33,6 +36,15 @@ namespace OnionTestGame
 
             text = new Text("Lives: " + player.Lives, new Vector2(10, 10));
             Add(text);
+
+            emitter = new Emitter(new Vector2(200, 200), new Action<Particle>(TestStage.UpdateParticle));
+            emitter.LoadImages(new Texture2D[] { Utils.MakeGraphic(4, 4, Color.White) });
+            emitter.GenerateOrigins();
+            //emitter.
+            Add(emitter);
+
+            
+            emitter.LockTo(player, Vector2.Zero);
 
             base.Init();
         }
@@ -56,7 +68,7 @@ namespace OnionTestGame
             if (player.Lives <= 0)
             {
                 text.Value = "GAME OVER.";
-                Remove(player);
+                player.Kill();
             }
 
 
@@ -71,7 +83,17 @@ namespace OnionTestGame
 
             Enemies.RemoveAll(x => !x.Alive);
 
+            for (int i = 0; i < 2; i++)
+                emitter.AddParticle(Emitter.RandomizeVelocity(50, 200), 1f, new Color(OE.RandInt(255), OE.RandInt(255), OE.RandInt(255)));
+
             base.Update();
         }
+
+        public static void UpdateParticle(Particle particle)
+        {
+            particle.Velocity *= 0.98f;
+            particle.Alpha -= OE.Delta;
+        }
+        
     }
 }

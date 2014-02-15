@@ -185,5 +185,12 @@ namespace OnionTestGame
 
             Stage.Add(SwordSwipe);
         }
+        public override void Kill()
+        {
+
+            Stage.Remove(SwordSwipe);
+            base.Kill();
+            
+        }
     }
 }

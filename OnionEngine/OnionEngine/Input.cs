@@ -10,7 +10,7 @@ namespace OnionEngine
     /// <summary>
     /// Input managing class. Don't instantiate this; use OE.Input instead.
     /// </summary>
-    class Input
+    public class Input
     {
         KeyboardState oldKeyboardState, newKeyboardState;
         GamePadState oldGamePadState, newGamePadState;

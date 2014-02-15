@@ -10,7 +10,7 @@ namespace OnionEngine
     /// <summary>
     /// This class, or a derivative, will be basically every object in your game.
     /// </summary>
-    class Entity
+    public class Entity
     {
         protected Stage Stage;
 
@@ -158,7 +158,7 @@ namespace OnionEngine
             Hitbox.Offset = offset;
         }
 
-        public void Kill()
+        public virtual void Kill()
         {
             Alive = false;
             Stage.Remove(this);

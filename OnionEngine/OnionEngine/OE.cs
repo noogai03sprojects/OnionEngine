@@ -5,13 +5,14 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 
 namespace OnionEngine
 {
     /// <summary>
     /// The engine's catch-all main class, like FP in FlashPunk and FlxG in Flixel.
     /// </summary>
-    static class OE
+    public static class OE
     {
         public static bool HasStage = false;
         public static Stage Stage;
@@ -22,12 +23,13 @@ namespace OnionEngine
         public static SpriteBatch SpriteBatch;
         public static GraphicsDevice Device;
         public static PrimitiveBatch PrimBatch;
+        public static float ScreenWidth, ScreenHeight;
 
         public static OEGame Game;
 
         public static Input Input = new Input();
 
-        public static Debug Debug = new Debug();
+        public static Debug Debug;
 
         public static Random Random = new Random();
 
@@ -48,6 +50,10 @@ namespace OnionEngine
             Delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             //if (IsFirstFrame
+            if (Input.Pressed(Keys.F12))
+            {
+                Console.WriteLine("lol");
+            }
 
             Input.Update();
         }

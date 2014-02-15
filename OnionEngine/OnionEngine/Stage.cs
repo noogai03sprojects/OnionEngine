@@ -9,12 +9,14 @@ namespace OnionEngine
     /// <summary>
     /// The equivalent of World in FlashPunk. Add entities to a subclass of this.
     /// </summary>
-    abstract class Stage
+    public abstract class Stage
     {
         private List<Entity> UpdateList = new List<Entity>();
         private List<Entity> RenderList = new List<Entity>();
 
         private List<Entity> AllEntities = new List<Entity>();
+
+        private List<Emitter> Emitters = new List<Emitter>();
 
         protected Color bgColor = Color.Transparent;
 
@@ -42,6 +44,15 @@ namespace OnionEngine
             }
         }
 
+        public void Add(Emitter e)
+        {
+            Emitters.Add(e);
+        }
+        public void Remove(Emitter e)
+        {
+            Emitters.Remove(e);
+        }
+
         public void Remove(Entity entity)
         {
             if (UpdateList.Contains(entity))
@@ -56,7 +67,7 @@ namespace OnionEngine
 
         public virtual void Init()
         {
-            
+            Add(OE.Debug.FPS, true, false);
         }
 
         public void Draw()
@@ -64,8 +75,14 @@ namespace OnionEngine
             OE.Device.Clear(bgColor);
             for (int i = 0; i < RenderList.Count; i++)
             {
-                UpdateList[i].Draw();
+                
+                RenderList[i].Draw();
             }
+            for (int i = 0; i < Emitters.Count; i++)
+            {
+                Emitters[i].Draw();
+            }
+            //Console.WriteLine(OE.Debug.FPS.Value);
         }
 
         public virtual void Update()
@@ -73,7 +90,11 @@ namespace OnionEngine
             for (int i = 0; i < UpdateList.Count; i++)
             {
                 UpdateList[i].Update();
-            }            
+            }
+            for (int i = 0; i < Emitters.Count; i++)
+            {
+                Emitters[i].UpdateParticles();
+            }
         }
 
         internal void DrawDebug()
@@ -92,6 +113,8 @@ namespace OnionEngine
                     OE.PrimBatch.DrawRectangle((RectangleF)AllEntities[i].Hitbox, Color.Red, OE.Debug.HitboxColor, false);
                 }
             }
+
+            
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace OnionEngine
     {
         public static Particle Blank = new Particle();
         public bool Alive;
-        public int Age;
+        public float Age;
 
         public Vector2 Position;
         public Vector2 Velocity;
@@ -22,6 +22,9 @@ namespace OnionEngine
 
         public float Angle;
         public float AngVel;
+
+        public float Alpha = 1;
+        public Color Color;
         //public Vector2 Acceleration = Vector2.Zero;
 
         //public Action<Particle> UpdateMethod;
@@ -30,7 +33,7 @@ namespace OnionEngine
         {
             //UpdateMethod = update;            
             Alive = false;
-            Age = 0;
+            Age = 0f;
             Position = Vector2.Zero;
             Velocity = Vector2.Zero;
             ImageIndex = 0;

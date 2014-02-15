@@ -12,14 +12,14 @@ namespace OnionEngine
     /// <summary>
     /// A base engine class that provides core stuff. Leave this alone.
     /// </summary>
-    class OEGame : Game
+    public class OEGame : Game
     {
-        GraphicsDeviceManager graphics;        
+        GraphicsDeviceManager graphics;
 
         public OEGame()
         {
             graphics = new GraphicsDeviceManager(this);
-            
+
             Content.RootDirectory = "Content";
             IsFixedTimeStep = false;
         }
@@ -28,26 +28,32 @@ namespace OnionEngine
         {
             Content.RootDirectory = "Content";
             OE.Content = Content;
+
             InitGame();
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             OE.Debug.Font = Content.Load<SpriteFont>("OnionResources\\OnionFont");
-            
+
             base.LoadContent();
         }
 
         public void InitGame()
         {
-            
             OE.Device = graphics.GraphicsDevice;
+            OE.ScreenHeight = OE.Device.Viewport.Height;
+            OE.ScreenWidth = OE.Device.Viewport.Width;
+
+            OE.Debug = new Debug();
+
             OE.Game = this;
             OE.SpriteBatch = new SpriteBatch(OE.Device);
             OE.PrimBatch = new PrimitiveBatch(OE.Device);
             OE.Stage.Init();
-            
+
         }
 
         protected override void BeginRun()

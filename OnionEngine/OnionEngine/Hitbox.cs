@@ -9,7 +9,7 @@ namespace OnionEngine
     /// <summary>
     /// Does what it says on the tin. Helps manage collisions between entities.
     /// </summary>
-    class Hitbox
+    public class Hitbox
     {
         public Entity Owner;
         public Vector2 Position;

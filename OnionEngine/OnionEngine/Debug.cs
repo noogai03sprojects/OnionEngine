@@ -10,7 +10,7 @@ namespace OnionEngine
     /// <summary>
     /// Does various debuggy things, such as drawing hitboxes for entities.
     /// </summary>
-    class Debug
+    public class Debug
     {
         public bool Enabled = false;
 
@@ -18,13 +18,23 @@ namespace OnionEngine
         public Color HitboxColor = Color.Blue;
 
         public SpriteFont Font;
+        public Text FPS;
+
+        public Debug()
+        {
+            FPS = new Text("FPS: ", new Vector2(OE.ScreenWidth - 200, 10));            
+        }
 
         public void Draw()
         {
+            FPS.Alive = false;
             if (Enabled)
             {
+                FPS.Alive = true;
+                FPS.Value = "FPS: " + (int)(1 / OE.Delta);
                 OE.Stage.DrawDebug();
                 //Console.WriteLine("debug");
+                
             }
         }
     }

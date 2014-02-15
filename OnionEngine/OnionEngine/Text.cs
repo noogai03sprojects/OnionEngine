@@ -9,7 +9,7 @@ namespace OnionEngine
     /// <summary>
     /// Class for drawing text through OnionEngine using the default font.
     /// </summary>
-    class Text : Entity
+    public class Text : Entity
     {
         public string Value;
 
