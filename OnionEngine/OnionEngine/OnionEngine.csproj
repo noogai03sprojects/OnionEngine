@@ -121,6 +121,8 @@
     <Compile Include="Debug\PrimitiveBatch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OEGame.cs" />
+    <Compile Include="TestGame\BaseEnemy.cs" />
+    <Compile Include="TestGame\Bouncer.cs" />
     <Compile Include="TestGame\Enemy.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="Emitter.cs" />

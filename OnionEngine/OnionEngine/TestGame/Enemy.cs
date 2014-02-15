@@ -7,12 +7,13 @@ using Microsoft.Xna.Framework;
 
 namespace OnionTestGame
 {
-    class Enemy : Entity
+    class Enemy : BaseEnemy
     {
-        Player player;
+        
         public Enemy(Player player)
+            :base (player)
         {
-            this.player = player;
+            
         }
 
         int HP = 20;
@@ -62,15 +63,25 @@ namespace OnionTestGame
                 }
 
                 if (HP <= 0)
+                {
                     Kill();
+                    player.Points += 5;
+                }
+
                 Velocity = player.Velocity + new Vector2(
                     200 * (float)Math.Cos(MathHelper.PiOver2 * player.Direction),
                     200 * (float)Math.Sin(MathHelper.PiOver2 * player.Direction));
             }
 
             Angle += 2 * OE.Delta;
-
+            
             base.Update();
+        }
+
+        public override void Kill()
+        {
+            (Stage as TestStage).MakeExplosion(Position,150);
+            base.Kill();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace OnionEngine
         public float AngularDrag = 0;
 
         public string Type = "none";
-        public Hitbox Hitbox;
+        public Hitbox Hitbox { get; private set; }
         public bool HasHitbox = false;
 
         public bool Alive = true;

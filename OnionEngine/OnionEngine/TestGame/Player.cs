@@ -19,6 +19,8 @@ namespace OnionTestGame
 
         public int Lives = 10;
         public bool Invulnerable = false;
+
+        public int Points = 0;
         
         public override void Init(Stage stage)
         {
@@ -97,6 +99,7 @@ namespace OnionTestGame
             //if you're touching an ememy, kill the player.
             if (Collide("enemy") != null && !Invulnerable)
             {
+                (Stage as TestStage).MakeExplosion(Position, 400, 400);
                 //Console.WriteLine(Lives);
                 Position = new Vector2(400, 200);
                 Lives--;
@@ -187,7 +190,7 @@ namespace OnionTestGame
         }
         public override void Kill()
         {
-
+            
             Stage.Remove(SwordSwipe);
             base.Kill();
             

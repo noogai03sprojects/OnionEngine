@@ -15,9 +15,10 @@ namespace OnionTestGame
 
         float timer = 1;
 
-        public List<Enemy> Enemies = new List<Enemy>();
+        public List<BaseEnemy> Enemies = new List<BaseEnemy>();
 
         Text text;
+        Text score;
 
         Emitter emitter;
 
@@ -36,6 +37,8 @@ namespace OnionTestGame
 
             text = new Text("Lives: " + player.Lives, new Vector2(10, 10));
             Add(text);
+            score = new Text("Score: " + player.Points, new Vector2(200, 10));
+            Add(score);
 
             emitter = new Emitter(new Vector2(200, 200), new Action<Particle>(TestStage.UpdateParticle));
             emitter.LoadImages(new Texture2D[] { Utils.MakeGraphic(4, 4, Color.White) });
@@ -57,11 +60,13 @@ namespace OnionTestGame
             }
             if (OE.Input.Pressed(Keys.D1))
             {
-                Enemies.Add(new Enemy(player));
+                Enemies.Add(new Bouncer(player));
                 Add(Enemies);
             }
 
             text.Value = "Lives: " + player.Lives;
+            score.Value = "Score: " + player.Points;
+
             if (player.Invulnerable)
                 text.Value = "Invulnerable";
 
@@ -83,8 +88,8 @@ namespace OnionTestGame
 
             Enemies.RemoveAll(x => !x.Alive);
 
-            for (int i = 0; i < 2; i++)
-                emitter.AddParticle(Emitter.RandomizeVelocity(50, 200), 1f, new Color(OE.RandInt(255), OE.RandInt(255), OE.RandInt(255)));
+            //for (int i = 0; i < 2; i++)
+                //emitter.AddParticle(Emitter.RandomizeVelocity(50, 200), 1f, new Color(OE.RandInt(255), OE.RandInt(255), OE.RandInt(255)));
 
             base.Update();
         }
@@ -93,6 +98,16 @@ namespace OnionTestGame
         {
             particle.Velocity *= 0.98f;
             particle.Alpha -= OE.Delta;
+        }
+
+        public void MakeExplosion(Vector2 position, float size, int number = 50)
+        {
+            emitter.Position = position;
+            for (int i = 0; i < number; i++)
+            {
+                int value = OE.RandInt(255);
+                emitter.AddParticle(Emitter.RandomizeVelocity(10, size), 1f, new Color(value, value, value));
+            }
         }
         
     }
