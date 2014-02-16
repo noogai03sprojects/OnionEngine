@@ -80,7 +80,7 @@ namespace OnionTestGame
 
         public override void Kill()
         {
-            (Stage as TestStage).MakeExplosion(Position,150);
+            (Stage as TestStage).MakeParticleExplosion(Position,150);
             base.Kill();
         }
     }

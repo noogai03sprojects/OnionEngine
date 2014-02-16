@@ -14,6 +14,7 @@ namespace OnionTestGame
         Entity AoEBox;
 
         bool Charging;
+        float ChargeTimer = 0;
 
 
         public Bouncer(Player pl)
@@ -68,9 +69,10 @@ namespace OnionTestGame
                 }
             }
 
-            if (AoEBox.Collide("player") != null)
+            if (AoEBox.Collide("player") != null && !Charging)
             {
                 Charging = true;
+                ChargeTimer = 2;
             }
 
             if (HP <= 0)
@@ -81,6 +83,18 @@ namespace OnionTestGame
             }
 
             AoEBox.Position = Position;
+
+            if (Charging)
+            {
+                ChargeTimer -= OE.Delta;
+
+                if (ChargeTimer <= 0)
+                {
+                    (Stage as TestStage).MakeExplosion(Position, 200);
+
+                    Charging = false;
+                }
+            }
 
             base.Update();
         }

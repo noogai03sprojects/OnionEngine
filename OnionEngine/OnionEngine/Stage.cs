@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace OnionEngine
 {
@@ -11,29 +12,33 @@ namespace OnionEngine
     /// </summary>
     public abstract class Stage
     {
-        private List<Entity> UpdateList = new List<Entity>();
-        private List<Entity> RenderList = new List<Entity>();
+        private List<OnionBasic> UpdateList = new List<OnionBasic>();
+        private List<OnionBasic> RenderList = new List<OnionBasic>();
 
         private List<Entity> AllEntities = new List<Entity>();
 
-        private List<Emitter> Emitters = new List<Emitter>();
+        //private List<Emitter> Emitters = new List<Emitter>();
 
         protected Color bgColor = Color.Transparent;
 
-        public void Add(Entity entity, bool render = true, bool update = true)
+        public void Add(OnionBasic entity, bool render = true, bool update = true)
         {
             
             if (update && !UpdateList.Contains(entity))
                 UpdateList.Add(entity);
             if (render && !RenderList.Contains(entity))
                 RenderList.Add(entity);
-            if (!AllEntities.Contains(entity))
+            if (entity is Entity)
             {
-                AllEntities.Add(entity);
-                entity.Init(this);
+                var e = entity as Entity;
+                if (!AllEntities.Contains(entity))
+                {
+                    AllEntities.Add(e);
+                    (e).Init(this);
+                }
+
+                (e).Alive = true;
             }
-            
-            entity.Alive = true;
         }
 
         public void Add(IEnumerable<Entity> entities, bool render = true, bool update = true)
@@ -44,14 +49,14 @@ namespace OnionEngine
             }
         }
 
-        public void Add(Emitter e)
-        {
-            Emitters.Add(e);
-        }
-        public void Remove(Emitter e)
-        {
-            Emitters.Remove(e);
-        }
+        //public void Add(Emitter e)
+        //{
+        //    //Emitters.Add(e);
+        //}
+        //public void Remove(Emitter e)
+        //{
+        //    //Emitters.Remove(e);
+        //}
 
         public void Remove(Entity entity)
         {
@@ -78,9 +83,9 @@ namespace OnionEngine
                 
                 RenderList[i].Draw();
             }
-            for (int i = 0; i < Emitters.Count; i++)
+            //for (int i = 0; i < Emitters.Count; i++)
             {
-                Emitters[i].Draw();
+                //Emitters[i].Draw();
             }
             //Console.WriteLine(OE.Debug.FPS.Value);
         }
@@ -91,13 +96,13 @@ namespace OnionEngine
             {
                 UpdateList[i].Update();
             }
-            for (int i = 0; i < Emitters.Count; i++)
+            //for (int i = 0; i < Emitters.Count; i++)
             {
-                Emitters[i].UpdateParticles();
+                //Emitters[i].Update();
             }
         }
 
-        internal void DrawDebug()
+        public virtual void DrawDebug()
         {
             //List<Entity> ents = RenderList.
             //foreach(Entity e in UpdateList)
@@ -106,6 +111,7 @@ namespace OnionEngine
             //UpdateList.
 
             //var ents = UpdateList.Union(RenderList).ToList();
+            OE.PrimBatch.Begin(PrimitiveType.LineList, OE.Camera.GetTransform());
             for (int i = 0; i < AllEntities.Count; i++)
             {
                 if (AllEntities[i].HasHitbox)
@@ -113,7 +119,7 @@ namespace OnionEngine
                     OE.PrimBatch.DrawRectangle((RectangleF)AllEntities[i].Hitbox, Color.Red, OE.Debug.HitboxColor, false);
                 }
             }
-
+            OE.PrimBatch.End();
             
         }
 
@@ -125,6 +131,25 @@ namespace OnionEngine
         public List<Entity> GetEntities(string type)
         {
             return AllEntities.Where(x => x.Type == type).Where(x => x.HasHitbox).ToList();
+        }
+
+        /// <summary>
+        /// Query the stage for intersection with a CircularHitbox.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public List<Entity> QueryCircle(CircularHitbox box, string type)
+        {
+            var result = new List<Entity>();
+            for (int i = 0; i < AllEntities.Count; i++)
+            {
+                if (AllEntities[i].HasHitbox && AllEntities[i].Type == type)
+                {
+                    if (Utils.Intersects(AllEntities[i].Hitbox, box))
+                        result.Add(AllEntities[i]);
+                }
+            }
+            return result;
         }
     }
 }

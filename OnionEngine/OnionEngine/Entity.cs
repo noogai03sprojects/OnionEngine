@@ -10,7 +10,7 @@ namespace OnionEngine
     /// <summary>
     /// This class, or a derivative, will be basically every object in your game.
     /// </summary>
-    public class Entity
+    public class Entity : OnionBasic
     {
         protected Stage Stage;
 
@@ -55,7 +55,7 @@ namespace OnionEngine
             Stage = stage;            
         }        
 
-        public virtual void Update()
+        public override void Update()
         {
             float velocityDelta = 0;
 
@@ -167,12 +167,19 @@ namespace OnionEngine
         /// <summary>
         /// Draws the sprite. This is normally called internally if the entity is in the Stage's RenderList.
         /// </summary>
-        public virtual void Draw()
+        public override void Draw()
         {
             if (Animated)
-                OE.SpriteBatch.Draw(Graphic, Position, frameBounds, Color, Angle, Origin, 1, 0, 0);
+            {
+                if (Graphic != null)
+                    OE.SpriteBatch.Draw(Graphic, Position, frameBounds, Color, Angle, Origin, 1, 0, 0);
+
+            }
             else
-                OE.SpriteBatch.Draw(Graphic, Position, null, Color, Angle, Origin, 1, 0, 0);
+            {
+                if (Graphic != null)
+                    OE.SpriteBatch.Draw(Graphic, Position, null, Color, Angle, Origin, 1, 0, 0);
+            }
         }
 
         public void CentreOrigin()

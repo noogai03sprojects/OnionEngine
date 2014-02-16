@@ -10,7 +10,7 @@ namespace OnionEngine
     /// <summary>
     /// A particle emitter. Hopefully it's efficient :D
     /// </summary>
-    public class Emitter
+    public class Emitter : OnionBasic
     {
         List<Particle> Particles;
 
@@ -132,7 +132,7 @@ namespace OnionEngine
             Particles[i].Alive = true;
         }
 
-        public void UpdateParticles()
+        public override void Update()
         {
             if (locked)
                 Position = Target.Position + offset;
@@ -158,7 +158,7 @@ namespace OnionEngine
             
         }
 
-        public void Draw()
+        public override void Draw()
         {
             for (int i = 0; i < capacity; i++)
             {

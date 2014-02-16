@@ -19,6 +19,16 @@ namespace OnionEngine
         public bool Flipped = false;
         Vector2 originalSize;
 
+        //public Vector2 TopLeft;
+
+        public Vector2 Centre
+        {
+            get
+            {
+                return Position + Size / 2;
+            }
+        }
+
 
         //public static readonly Hitbox None = new Hitbox(0, 0, null);
 
@@ -32,6 +42,7 @@ namespace OnionEngine
 
         public void Update()
         {
+            //TopLeft = Pos
             Position = Owner.Position + Offset;
             if (Flipped)
             {

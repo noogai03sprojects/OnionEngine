@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
+    <Compile Include="CircularHitbox.cs" />
     <Compile Include="Debug.cs" />
     <Compile Include="Debug\RectangleF.cs" />
     <Compile Include="Entity.cs" />
@@ -119,13 +120,16 @@
     <Compile Include="Input.cs" />
     <Compile Include="OE.cs" />
     <Compile Include="Debug\PrimitiveBatch.cs" />
+    <Compile Include="OnionBasic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OEGame.cs" />
     <Compile Include="TestGame\BaseEnemy.cs" />
     <Compile Include="TestGame\Bouncer.cs" />
+    <Compile Include="Camera.cs" />
     <Compile Include="TestGame\Enemy.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="Emitter.cs" />
+    <Compile Include="TestGame\Explosion.cs" />
     <Compile Include="TestGame\Player.cs" />
     <Compile Include="TestGame\Program.cs" />
     <Compile Include="Stage.cs" />

@@ -32,7 +32,11 @@ namespace OnionEngine
             {
                 FPS.Alive = true;
                 FPS.Value = "FPS: " + (int)(1 / OE.Delta);
+
+                
                 OE.Stage.DrawDebug();
+
+                
                 //Console.WriteLine("debug");
                 
             }

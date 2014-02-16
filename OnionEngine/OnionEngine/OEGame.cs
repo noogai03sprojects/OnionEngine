@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace OnionEngine
 {
@@ -53,7 +54,7 @@ namespace OnionEngine
             OE.SpriteBatch = new SpriteBatch(OE.Device);
             OE.PrimBatch = new PrimitiveBatch(OE.Device);
             OE.Stage.Init();
-
+            IsMouseVisible = true;
         }
 
         protected override void BeginRun()
@@ -63,6 +64,8 @@ namespace OnionEngine
 
         protected override void Update(GameTime gameTime)
         {
+            if (OE.Input.Check(Keys.Escape))
+                Exit();
             OE.gameTime = gameTime;
             OE.Update();
             //Console.WriteLine(OE.delta);
@@ -80,7 +83,8 @@ namespace OnionEngine
         {
             GraphicsDevice.Clear(Color.Red);
 
-            OE.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            OE.SpriteBatch.Begin(0, null, null, null, null, null, OE.Camera.GetTransform());
+            //OE.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, OE.Camera.GetTransform());
             if (OE.HasStage)
             {
                 OE.Stage.Draw();

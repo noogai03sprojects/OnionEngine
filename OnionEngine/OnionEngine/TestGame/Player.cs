@@ -24,7 +24,8 @@ namespace OnionTestGame
         
         public override void Init(Stage stage)
         {
-            MakeGraphic(20, 20, Color.Green);
+            MakeGraphic(20, 20, Color.White);
+            Color = Color.Green;
             
             Position = new Vector2(400, 200);
             MaxVelocity.X = 200;
@@ -95,25 +96,13 @@ namespace OnionTestGame
 
             SwordSwipe.Hitbox.CentreOrigin();
 
+            //Mouse.SetPosition((int)SwordSwipe.Hitbox.Position.X, (int)SwordSwipe.Hitbox.Position.Y);
+
             
             //if you're touching an ememy, kill the player.
             if (Collide("enemy") != null && !Invulnerable)
             {
-                (Stage as TestStage).MakeExplosion(Position, 400, 400);
-                //Console.WriteLine(Lives);
-                Position = new Vector2(400, 200);
-                Lives--;
-                int count = ((TestStage)OE.UserData[0]).Enemies.Count;
-
-                float step = MathHelper.TwoPi / count;
-                for (int i = 0; i < count; i++)
-                {
-                    Vector2 pos = new Vector2( 200 * (float)Math.Cos(i * step),
-                                              200 * (float)Math.Sin(i * step));
-                    ((TestStage)OE.UserData[0]).Enemies[i].Position = Position + pos;
-                    ((TestStage)OE.UserData[0]).Enemies[i].Velocity = Vector2.Zero;
-                    ((TestStage)OE.UserData[0]).Enemies[i].InvulnTimer = 0;
-                }
+                LoseLife();
                     //200 * (float)Math.Cos(step
             }
             SwordSwipe.Hitbox.CentreOrigin();
@@ -147,6 +136,25 @@ namespace OnionTestGame
 
             base.Update();
             SwordSwipe.Hitbox.CentreOrigin();
+        }
+
+        public void LoseLife()
+        {
+            (Stage as TestStage).MakeParticleExplosion(Position, 400, 400);
+            //Console.WriteLine(Lives);
+            Position = new Vector2(400, 200);
+            Lives--;
+            int count = ((TestStage)OE.UserData[0]).Enemies.Count;
+
+            float step = MathHelper.TwoPi / count;
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 pos = new Vector2(200 * (float)Math.Cos(i * step),
+                                          200 * (float)Math.Sin(i * step));
+                ((TestStage)OE.UserData[0]).Enemies[i].Position = Position + pos;
+                ((TestStage)OE.UserData[0]).Enemies[i].Velocity = Vector2.Zero;
+                ((TestStage)OE.UserData[0]).Enemies[i].InvulnTimer = 0;
+            }
         }
 
         private void Attack()

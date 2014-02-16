@@ -11,7 +11,7 @@ namespace OnionTestGame
 {
     class TestStage : Stage
     {
-        Player player;
+        public Player player;
 
         float timer = 1;
 
@@ -22,6 +22,8 @@ namespace OnionTestGame
 
         Emitter emitter;
 
+        public List<Explosion> Explosions = new List<Explosion>();
+
         public override void Init()
         {
             bgColor = Color.CornflowerBlue;
@@ -29,8 +31,8 @@ namespace OnionTestGame
             player = new Player();            
             Add(player);
 
-            Enemies.Add(new Enemy(player));
-            Add(Enemies);
+            //Enemies.Add(new Enemy(player));
+            //Add(Enemies);
 
             OE.UserData.Add(this);
             OE.Debug.Enabled = true;
@@ -48,6 +50,7 @@ namespace OnionTestGame
 
             
             emitter.LockTo(player, Vector2.Zero);
+            OE.Camera.Follow(player);
 
             base.Init();
         }
@@ -58,7 +61,7 @@ namespace OnionTestGame
             {
                 OE.Debug.Enabled = !OE.Debug.Enabled;
             }
-            if (OE.Input.Pressed(Keys.D1))
+            if (OE.Input.Pressed(Keys.A))
             {
                 Enemies.Add(new Bouncer(player));
                 Add(Enemies);
@@ -80,8 +83,8 @@ namespace OnionTestGame
             timer -= OE.Delta;
             if (timer <= 0)
             {
-                Enemies.Add(new Enemy(player));
-                Add(Enemies);
+                //Enemies.Add(new Enemy(player));
+                //Add(Enemies);
 
                 timer = 2f;
             }
@@ -100,7 +103,7 @@ namespace OnionTestGame
             particle.Alpha -= OE.Delta;
         }
 
-        public void MakeExplosion(Vector2 position, float size, int number = 50)
+        public void MakeParticleExplosion(Vector2 position, float size, int number = 50)
         {
             emitter.Position = position;
             for (int i = 0; i < number; i++)
@@ -108,6 +111,26 @@ namespace OnionTestGame
                 int value = OE.RandInt(255);
                 emitter.AddParticle(Emitter.RandomizeVelocity(10, size), 1f, new Color(value, value, value));
             }
+        }
+
+        public void MakeExplosion(Vector2 position, float radius)
+        {
+            Explosions.Add(new Explosion(position, radius, 1));
+            Add(Explosions);
+            //Add(new Explosion(position, radius, 2), false, true);
+        }
+
+        public override void DrawDebug()
+        {
+            OE.PrimBatch.Begin(PrimitiveType.LineList);
+
+            for (int i = 0; i < Explosions.Count; i++)
+            {
+                OE.PrimBatch.DrawCircle(Explosions[i].aoe.Position, Explosions[i].aoe.Radius, Color.Green);
+            }
+
+            OE.PrimBatch.End();
+            base.DrawDebug();
         }
         
     }

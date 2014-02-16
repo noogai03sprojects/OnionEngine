@@ -19,6 +19,7 @@ namespace OnionEngine
 
         public static GameTime gameTime;
         public static float Delta;
+        public static float Elapsed { get { return Delta; } }
 
         public static SpriteBatch SpriteBatch;
         public static GraphicsDevice Device;
@@ -37,12 +38,16 @@ namespace OnionEngine
 
         public static ContentManager Content;
 
+        public static Camera Camera;
+
         //public static readonly bool IsFirstFrame = true;
 
         public static void SetStage(Stage s)
         {
             Stage = s;
             HasStage = true;
+
+            Camera = new Camera();
         }
 
         public static void Update()

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace OnionEngine
 {
-    static class Utils
+    public static class Utils
     {
         public static Texture2D Pixel;
 
@@ -73,6 +73,31 @@ namespace OnionEngine
                 return false;
 
             return true;            
+        }
+        public static bool Intersects(Hitbox b, CircularHitbox c)
+        {         
+            //Vector2 closest = new Vector2(MathHelper.Clamp(c.Position.X, b.Centre.X - b.Size.X / 2, b.Centre.X + b.Size.X / 2),
+            //    MathHelper.Clamp(c.Position.Y, b.Centre.Y - b.Size.Y / 2, b.Centre.Y + b.Size.Y / 2));            
+
+            //Vector2 distance = c.Position -closest;
+
+            //return distance.LengthSquared() < (c.Radius * c.Radius);
+            float cX = c.Position.X;
+            float cY = c.Position.X;
+            float rX = b.Centre.X;
+            float rY = b.Centre.Y;
+            float halfWidth = b.Width / 2;
+            float halfHeight = b.Height / 2;
+
+
+            float closestX = MathHelper.Clamp(cX, rX - halfWidth, rX + halfWidth);
+            float closestY = MathHelper.Clamp(cY, rY - halfHeight, rY + halfHeight);
+
+            float distX = cX - closestX;
+            float distY = cY - closestY;
+
+            float distSq = (distX * distX) + (distY * distY);
+            return distSq < (c.Radius * c.Radius);
         }
     }
 }
